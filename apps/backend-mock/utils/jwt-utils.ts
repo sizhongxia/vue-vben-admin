@@ -26,12 +26,10 @@ export function generateRefreshToken(user: UserInfo) {
 export function verifyAccessToken(
   event: H3Event<EventHandlerRequest>,
 ): null | Omit<UserInfo, 'password'> {
-  const authHeader = getHeader(event, 'Authorization');
-  if (!authHeader?.startsWith('Bearer')) {
+  const token = getHeader(event, 'Authorization');
+  if (!token) {
     return null;
   }
-
-  const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as UserPayload;
 

@@ -55,7 +55,7 @@ function createRequestClient(baseURL: string) {
   }
 
   function formatToken(token: null | string) {
-    return token ? `Bearer ${token}` : null;
+    return token ? `${token}` : null;
   }
 
   // 请求头处理

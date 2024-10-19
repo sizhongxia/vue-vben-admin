@@ -3,8 +3,8 @@ import type { RouteRecordStringComponent } from '@vben/types';
 import { requestClient } from '#/api/request';
 
 /**
- * 获取用户所有菜单
+ * 获取用户授权菜单
  */
-export async function getAllMenusApi() {
-  return requestClient.get<RouteRecordStringComponent[]>('/menu/all');
+export async function getAuthMenuApi() {
+  return requestClient.get<RouteRecordStringComponent[]>('/auth/menus');
 }
