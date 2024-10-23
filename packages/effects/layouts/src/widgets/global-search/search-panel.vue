@@ -186,7 +186,7 @@ function createSearchReg(key: string) {
   // 然后用'.*'连接所有字符，创建正则表达式
   const keys = [...key].map((item) => transform(item)).join('.*');
   // 返回创建的正则表达式
-  return new RegExp(`.*${keys}.*`);
+  return new RegExp(`.*${keys}.*`, 'i');
 }
 
 watch(

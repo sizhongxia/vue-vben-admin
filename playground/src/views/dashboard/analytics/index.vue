@@ -2,23 +2,21 @@
 import type { AnalysisOverviewItem } from '@vben/common-ui';
 import type { TabOption } from '@vben/types';
 
-import {
-  AnalysisChartCard,
-  AnalysisChartsTabs,
-  AnalysisOverview,
-} from '@vben/common-ui';
+import { onMounted, ref, watch } from 'vue';
+
+import { AnalysisChartsTabs, AnalysisOverview } from '@vben/common-ui';
 import {
   SvgBellIcon,
   SvgCakeIcon,
   SvgCardIcon,
   SvgDownloadIcon,
 } from '@vben/icons';
+import { usePreferences } from '@vben/preferences';
+
+import * as monaco from 'monaco-editor';
 
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisits from './analytics-visits.vue';
-import AnalyticsVisitsData from './analytics-visits-data.vue';
-import AnalyticsVisitsSales from './analytics-visits-sales.vue';
-import AnalyticsVisitsSource from './analytics-visits-source.vue';
 
 const overviewItems: AnalysisOverviewItem[] = [
   {
@@ -61,6 +59,46 @@ const chartTabs: TabOption[] = [
     value: 'visits',
   },
 ];
+
+const { isDark } = usePreferences();
+// 定义一个引用来持有编辑器容器的 DOM 元素
+const editorContainer = ref(null);
+
+watch(isDark, () => {
+  monaco.editor.setTheme(isDark.value ? 'vs-dark' : 'vs');
+});
+
+onMounted(() => {
+  initEditor();
+});
+
+function initEditor() {
+  // 确保 DOM 元素已经渲染
+  if (editorContainer.value) {
+    // eslint-disable-next-line no-console
+    console.log(isDark.value);
+    // 创建编辑器实例
+    const editor = monaco.editor.create(editorContainer.value, {
+      language: 'go',
+      theme: isDark.value ? 'vs-dark' : 'hc-light',
+      value:
+        'func Exec(param models.PluginModel) interface{} {sayHi();date := time.Now().Format("2006-01-02 15:04:05");logs.Info(param);return param.Name + " // " + date;}',
+    });
+    editor.addAction({
+      id: 'sayHi',
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.F2],
+      label: 'Say Hi',
+      run: (e, args) => {
+        // eslint-disable-next-line no-console
+        console.log(e.getValue(), args);
+      },
+    });
+    // setInterval(() => {
+    //   // eslint-disable-next-line no-console
+    //   console.log(editor.getValue());
+    // }, 1000);
+  }
+}
 </script>
 
 <template>
@@ -76,7 +114,7 @@ const chartTabs: TabOption[] = [
     </AnalysisChartsTabs>
 
     <div class="mt-5 w-full md:flex">
-      <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问数量">
+      <!-- <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问数量">
         <AnalyticsVisitsData />
       </AnalysisChartCard>
       <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问来源">
@@ -84,7 +122,15 @@ const chartTabs: TabOption[] = [
       </AnalysisChartCard>
       <AnalysisChartCard class="mt-5 md:mt-0 md:w-1/3" title="访问来源">
         <AnalyticsVisitsSales />
-      </AnalysisChartCard>
+      </AnalysisChartCard> -->
+      <div ref="editorContainer" class="coder-editor"></div>
     </div>
   </div>
 </template>
+
+<style lang="less" scoped>
+.coder-editor {
+  width: 100%;
+  height: 200px;
+}
+</style>

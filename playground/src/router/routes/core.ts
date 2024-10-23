@@ -1,7 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import { DEFAULT_HOME_PATH } from '@vben/constants';
-
 import { AuthPageLayout } from '#/layouts';
 import { $t } from '#/locales';
 import Login from '#/views/_core/authentication/login.vue';
@@ -21,14 +19,14 @@ const fallbackNotFoundRoute: RouteRecordRaw = {
 
 /** 基本路由，这些路由是必须存在的 */
 const coreRoutes: RouteRecordRaw[] = [
-  {
-    meta: {
-      title: 'Root',
-    },
-    name: 'Root',
-    path: '/',
-    redirect: DEFAULT_HOME_PATH,
-  },
+  // {
+  //   meta: {
+  //     title: 'Root',
+  //   },
+  //   name: 'Root',
+  //   path: '/',
+  //   redirect: DEFAULT_HOME_PATH,
+  // },
   {
     component: AuthPageLayout,
     meta: {
