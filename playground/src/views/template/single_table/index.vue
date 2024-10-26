@@ -59,7 +59,6 @@ async function loadData(data: any) {
   // // eslint-disable-next-line no-console
   // console.info('data >>>', data);
   const { filters, isReload, page, sort } = data;
-  // GridApi.value.setLoading(true);
   // // eslint-disable-next-line no-console
   // console.info(
   //   `query page: ${JSON.stringify(page)}, form: ${JSON.stringify(form)}, filters: ${JSON.stringify(filters)}`,
@@ -142,22 +141,13 @@ async function loadData(data: any) {
     };
   }
 
-  let res = {};
-  try {
-    res = await getLowcodeMenuPageData({
-      condition,
-      currentPage: isReload ? 1 : page.currentPage,
-      metaObjectCode: metaObjectCode.value,
-      pageSize: page.pageSize,
-      sorts: sortArr,
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    // GridApi.value.setLoading(false);
-    // GridApi.value?.setGridOptions(res);
-  }
-  return res;
+  return await getLowcodeMenuPageData({
+    condition,
+    currentPage: isReload ? 1 : page.currentPage,
+    metaObjectCode: metaObjectCode.value,
+    pageSize: page.pageSize,
+    sorts: sortArr,
+  });
 }
 
 onMounted(async () => {
@@ -213,7 +203,7 @@ onMounted(async () => {
         component: item.component,
         // 对应组件的参数
         componentProps: {
-          placeholder: item.placeholder || '请输入',
+          placeholder: item.placeholder || '',
           ...options,
         },
         defaultValue: item.defaultValue,
