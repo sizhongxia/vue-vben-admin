@@ -10,6 +10,6 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   theme: {
     builtinType: 'default',
-    radius: '0.75',
+    radius: '0.25',
   },
 });

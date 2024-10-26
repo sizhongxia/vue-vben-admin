@@ -4,7 +4,7 @@ import type { VxeGridListeners, VxeGridProps } from '#/adapter/vxe-table';
 import { onMounted, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { Page } from '@vben/common-ui';
+import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { VbenButton } from '@vben-core/shadcn-ui';
 
 import dayjs from 'dayjs';
@@ -12,16 +12,23 @@ import dayjs from 'dayjs';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getLowcodeMenuPageData, getLowcodeMenuPageInfo } from '#/api';
 
+import CreateFormModal from '../models/create-form.vue';
+
 const title = ref('页面标题');
 const description = ref('页面描述');
 
-const Grid = shallowRef(null);
-const GridApi = shallowRef(null);
+const Grid = shallowRef();
 
 // const tableFilterData = ref({});
 const metaObjectCode = ref('');
 
 const ResetCurrentPage = ref(false);
+
+const [FormModal, formModalApi] = useVbenModal({
+  connectedComponent: CreateFormModal,
+});
+
+let GridApi: any = null;
 
 function getFormatterFunc(formatter: any) {
   if (formatter.func === 'boolFormatter') {
@@ -53,7 +60,7 @@ function getFormatterFunc(formatter: any) {
   };
 }
 
-const searchFormSchema = [];
+const searchFormSchema: any = [];
 
 async function loadData(data: any) {
   // // eslint-disable-next-line no-console
@@ -87,7 +94,7 @@ async function loadData(data: any) {
   // console.info('filters', filters);
   const conditions: any[] = [];
   if (filters && filters.length > 0) {
-    filters.forEach((item) => {
+    filters.forEach((item: any) => {
       conditions.push({
         field: item.field,
         type: 'in',
@@ -96,7 +103,7 @@ async function loadData(data: any) {
     });
   }
 
-  const formValues = GridApi.value.formApi?.form.values;
+  const formValues = GridApi?.formApi?.form.values;
   // // eslint-disable-next-line no-console
   // console.info('formValues', formValues);
   if (formValues) {
@@ -148,6 +155,13 @@ async function loadData(data: any) {
     pageSize: page.pageSize,
     sorts: sortArr,
   });
+}
+
+function openFormModal() {
+  formModalApi.setData({
+    values: { field1: 'abc' },
+  });
+  formModalApi.open();
 }
 
 onMounted(async () => {
@@ -281,7 +295,7 @@ onMounted(async () => {
       // // eslint-disable-next-line no-console
       // console.info('tableFilterData', tableFilterData.value);
       ResetCurrentPage.value = true;
-      GridApi.value.query();
+      GridApi?.query();
     },
     // pageChange: ({ currentPage, pageSize, type }: any) => {
     //   // eslint-disable-next-line no-console
@@ -294,7 +308,7 @@ onMounted(async () => {
     sortChange: (/* { field, order }: any */) => {
       // // eslint-disable-next-line no-console
       // console.info('sortChange', field, order);
-      GridApi.value.query();
+      GridApi?.query();
     },
   };
 
@@ -307,7 +321,7 @@ onMounted(async () => {
   // console.info('VxeGridApi', VxeGridApi);
 
   Grid.value = VxeGrid;
-  GridApi.value = VxeGridApi;
+  GridApi = VxeGridApi;
 });
 </script>
 
@@ -318,24 +332,25 @@ onMounted(async () => {
     :title="title"
     auto-content-height
   >
+    <FormModal />
     <Grid>
       <template #toolbar-tools>
         <VbenButton
           class="mx-4"
           size="sm"
           variant="default"
-          @click="() => GridApi.query()"
+          @click="openFormModal"
         >
-          刷新当前页面
+          新增
         </VbenButton>
-        <VbenButton
+        <!-- <VbenButton
           class="mx-4"
           size="sm"
           variant="default"
           @click="() => GridApi.reload()"
         >
           刷新并返回第一页
-        </VbenButton>
+        </VbenButton> -->
       </template>
     </Grid>
   </Page>
