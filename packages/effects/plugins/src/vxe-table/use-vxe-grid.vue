@@ -59,13 +59,17 @@ const slots = useSlots();
 
 const [Form, formApi] = useTableForm({
   handleSubmit: async () => {
-    const formValues = formApi.form.values;
-    props.api.reload(formValues);
+    // const formValues = formApi.form.values;
+    // // eslint-disable-next-line no-console
+    // console.log('formValues >>>>', formValues);
+    props.api.reload();
   },
   handleReset: async () => {
     await formApi.resetForm();
-    const formValues = formApi.form.values;
-    props.api.reload(formValues);
+    // const formValues = formApi.form.values;
+    // // eslint-disable-next-line no-console
+    // console.log('formValues >>>>', formValues);
+    props.api.reload();
   },
   commonConfig: {
     componentProps: {
@@ -129,22 +133,26 @@ const options = computed(() => {
       'NextJump',
     ] as any;
     const layouts = [
-      'Total',
-      'Sizes',
       'Home',
-      ...mobileLayouts,
+      'PrevJump',
+      'PrevPage',
+      'JumpNumber',
+      'NextPage',
+      'NextJump',
       'End',
+      'Sizes',
+      'Total',
     ] as readonly string[];
     mergedOptions.pagerConfig = mergeWithArrayOverride(
       {},
       mergedOptions.pagerConfig,
       {
-        pageSize: 20,
         background: true,
-        pageSizes: [10, 20, 30, 50, 100, 200],
+        pageSizes: [10, 20, 50, 100, 200, 500],
         className: 'mt-2 w-full',
         layouts: isMobile.value ? mobileLayouts : layouts,
         size: 'mini' as const,
+        pagerCount: 5,
       },
     );
   }

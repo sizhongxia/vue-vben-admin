@@ -9,20 +9,19 @@ import {
   VxeButton,
   VxeButtonGroup,
   // VxeFormGather,
-  // VxeForm,
-  // VxeFormItem,
+  VxeFormItem,
   VxeIcon,
   VxeInput,
+  VxeList,
   VxeLoading,
+  VxeModal,
+  VxeOptgroup,
+  VxeOption,
   VxePager,
-  // VxeList,
-  // VxeModal,
-  // VxeOptgroup,
-  // VxeOption,
-  // VxePulldown,
-  // VxeRadio,
-  // VxeRadioButton,
-  // VxeRadioGroup,
+  VxePulldown,
+  VxeRadio,
+  VxeRadioButton,
+  VxeRadioGroup,
   VxeSelect,
   VxeTooltip,
   VxeUI,
@@ -74,19 +73,19 @@ export function initVxeTable() {
   // VxeUI.component(VxeCheckboxGroup);
   VxeUI.component(createVirtualComponent('VxeForm'));
   // VxeUI.component(VxeFormGather);
-  // VxeUI.component(VxeFormItem);
+  VxeUI.component(VxeFormItem);
   VxeUI.component(VxeIcon);
   VxeUI.component(VxeInput);
-  // VxeUI.component(VxeList);
+  VxeUI.component(VxeList);
   VxeUI.component(VxeLoading);
-  // VxeUI.component(VxeModal);
-  // VxeUI.component(VxeOptgroup);
-  // VxeUI.component(VxeOption);
+  VxeUI.component(VxeModal);
+  VxeUI.component(VxeOptgroup);
+  VxeUI.component(VxeOption);
   VxeUI.component(VxePager);
-  // VxeUI.component(VxePulldown);
-  // VxeUI.component(VxeRadio);
-  // VxeUI.component(VxeRadioButton);
-  // VxeUI.component(VxeRadioGroup);
+  VxeUI.component(VxePulldown);
+  VxeUI.component(VxeRadio);
+  VxeUI.component(VxeRadioButton);
+  VxeUI.component(VxeRadioGroup);
   VxeUI.component(VxeSelect);
   // VxeUI.component(VxeSwitch);
   // VxeUI.component(VxeTextarea);
