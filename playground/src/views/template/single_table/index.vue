@@ -20,15 +20,16 @@ const description = ref('页面描述');
 const Grid = shallowRef();
 
 // const tableFilterData = ref({});
-const metaObjectCode = ref('');
+let metaObjectCode = '';
 
 const ResetCurrentPage = ref(false);
 
-const [FormModal, formModalApi] = useVbenModal({
+const [BasicCreateFormModal, basicCreateFormModalApi] = useVbenModal({
   connectedComponent: CreateFormModal,
 });
 
 let GridApi: any = null;
+const searchFormSchema: any = [];
 
 function getFormatterFunc(formatter: any) {
   if (formatter.func === 'boolFormatter') {
@@ -59,8 +60,6 @@ function getFormatterFunc(formatter: any) {
     return data.cellValue;
   };
 }
-
-const searchFormSchema: any = [];
 
 async function loadData(data: any) {
   // // eslint-disable-next-line no-console
@@ -151,17 +150,18 @@ async function loadData(data: any) {
   return await getLowcodeMenuPageData({
     condition,
     currentPage: isReload ? 1 : page.currentPage,
-    metaObjectCode: metaObjectCode.value,
+    metaObjectCode,
     pageSize: page.pageSize,
     sorts: sortArr,
   });
 }
 
-function openFormModal() {
-  formModalApi.setData({
+function openBasicCreateFormModal() {
+  basicCreateFormModalApi.setData({
+    title: '新增数据',
     values: { field1: 'abc' },
   });
-  formModalApi.open();
+  basicCreateFormModalApi.open();
 }
 
 onMounted(async () => {
@@ -171,7 +171,7 @@ onMounted(async () => {
 
   title.value = pageInfo?.title;
   description.value = pageInfo?.description;
-  metaObjectCode.value = pageInfo?.metaObjectCode;
+  metaObjectCode = pageInfo?.metaObjectCode;
 
   const columns = pageInfo?.columns;
   columns.forEach((item: any) => {
@@ -312,7 +312,7 @@ onMounted(async () => {
     },
   };
 
-  const [VxeGrid, VxeGridApi] = useVbenVxeGrid({
+  const [VxeGrid, vxeGridApi] = useVbenVxeGrid({
     formOptions,
     gridEvents,
     gridOptions,
@@ -321,7 +321,17 @@ onMounted(async () => {
   // console.info('VxeGridApi', VxeGridApi);
 
   Grid.value = VxeGrid;
-  GridApi = VxeGridApi;
+  GridApi = vxeGridApi;
+
+  // setTimeout(() => {
+  //   vxeGridApi.setState({
+  //     gridOptions: {
+  //       pagerConfig: {
+  //         pageSizes: [10, 20, 50, 100, 200, 2000],
+  //       },
+  //     },
+  //   });
+  // }, 5000);
 });
 </script>
 
@@ -332,14 +342,14 @@ onMounted(async () => {
     :title="title"
     auto-content-height
   >
-    <FormModal />
+    <BasicCreateFormModal />
     <Grid>
       <template #toolbar-tools>
         <VbenButton
           class="mx-4"
           size="sm"
           variant="default"
-          @click="openFormModal"
+          @click="openBasicCreateFormModal"
         >
           新增
         </VbenButton>

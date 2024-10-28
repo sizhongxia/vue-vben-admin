@@ -6,7 +6,7 @@ import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 
 defineOptions({
-  name: 'FormModelDemo',
+  name: 'CreateFormModel',
 });
 
 function onSubmit(values: Record<string, any>) {
@@ -32,7 +32,7 @@ const [Form, formApi] = useVbenForm({
       },
       fieldName: 'field2',
       label: '字段2',
-      rules: 'required',
+      rules: '',
     },
     {
       component: 'Select',
@@ -45,15 +45,30 @@ const [Form, formApi] = useVbenForm({
       },
       fieldName: 'field3',
       label: '字段3',
-      rules: 'required',
+      rules: '',
     },
   ],
   showDefaultActions: false,
 });
 
 const [Modal, modalApi] = useVbenModal({
+  cancelText: '取消',
+  class: 'w-[680px]',
+  closable: true,
+  closeOnClickModal: false,
+  closeOnPressEscape: true,
+  confirmLoading: true,
+  confirmText: '确认',
+  description: '内嵌表单示例',
   draggable: true,
+  footer: true,
   fullscreenButton: true,
+  loading: true,
+  modal: true,
+  onBeforeClose() {
+    // 关闭前的回调，返回 false 可以阻止关闭
+    return true;
+  },
   onCancel() {
     modalApi.close();
   },
@@ -63,17 +78,23 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange(isOpen: boolean) {
     if (isOpen) {
-      const { values } = modalApi.getData<Record<string, any>>();
+      // 获取弹窗父级传参数据
+      const { title, values } = modalApi.getData<Record<string, any>>();
+      // eslint-disable-next-line no-console
+      console.log(title);
+      modalApi.setState({ title });
       if (values) {
         formApi.setValues(values);
+
+        setTimeout(() => {
+          modalApi.setState({ confirmLoading: false, loading: false });
+        }, 2000);
       }
     }
   },
-  title: '内嵌表单示例',
+  title: '数据新增',
 });
 </script>
 <template>
-  <Modal class="w-[600px]" title="基础弹窗示例" title-tooltip="标题提示内容">
-    <Form />
-  </Modal>
+  <Modal><Form /></Modal>
 </template>
